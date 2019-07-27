@@ -43,9 +43,9 @@ export class DeepDiff {
     console.group(this.name)
 
     if (bold) {
-      console.warn(`%c%s`, `font-weight: bold`, status)
+      console.warn(`%c%s (depth %d)`, `font-weight: bold`, status, this.opts.maxdepth)
     } else {
-      console.warn(status)
+      console.warn(`%s (depth %d)`, status, this.opts.maxdepth)
     }
 
     console.log(`%cbefore`, `font-weight: bold`, this.prev)
