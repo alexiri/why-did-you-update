@@ -17,7 +17,7 @@ export class DeepDiff {
   }
 
   run(){
-    if (this.opts.maxdepth == 0) return;
+    if (this.opts.maxdepth <= 0) return;
     const isRefEntity = isReferenceEntity(this.prev) && isReferenceEntity(this.next)
 
     if (!_isEqual(this.prev, this.next)) {
