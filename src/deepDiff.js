@@ -17,6 +17,7 @@ export class DeepDiff {
   }
 
   run(){
+    if (this.opts.maxdepth == 0) return;
     const isRefEntity = isReferenceEntity(this.prev) && isReferenceEntity(this.next)
 
     if (!_isEqual(this.prev, this.next)) {
@@ -60,8 +61,10 @@ export class DeepDiff {
     } else {
       keys = _union(_keys(this.prev), _keys(this.next))
     }
+    let opts = this.opts;
+    opts.maxdepth = this.opts.maxdepth - 1;
     keys.forEach(key => {
-      return new DeepDiff(this.prev[key], this.next[key], `${this.name}.${key}`, this.opts).run()
+      return new DeepDiff(this.prev[key], this.next[key], `${this.name}.${key}`, opts).run()
     })
   }
 
