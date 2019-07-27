@@ -1590,6 +1590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(DeepDiff, [{
 	    key: 'run',
 	    value: function run() {
+	      if (this.opts.maxdepth <= 0) return;
 	      var isRefEntity = isReferenceEntity(this.prev) && isReferenceEntity(this.next);
 
 	      if (!(0, _lodashIsEqual2['default'])(this.prev, this.next)) {
@@ -1616,9 +1617,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	      console.group(this.name);
 
 	      if (bold) {
-	        console.warn('%c%s', 'font-weight: bold', status);
+	        console.warn('%c%s (depth %d)', 'font-weight: bold', status, this.opts.maxdepth);
 	      } else {
-	        console.warn(status);
+	        console.warn('%s (depth %d)', status, this.opts.maxdepth);
 	      }
 
 	      console.log('%cbefore', 'font-weight: bold', this.prev);
@@ -1637,8 +1638,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        keys = (0, _lodashUnion2['default'])((0, _lodashKeys2['default'])(this.prev), (0, _lodashKeys2['default'])(this.next));
 	      }
+	      var opts = this.opts;
+	      opts.maxdepth = this.opts.maxdepth - 1;
 	      keys.forEach(function (key) {
-	        return new DeepDiff(_this.prev[key], _this.next[key], _this.name + '.' + key, _this.opts).run();
+	        return new DeepDiff(_this.prev[key], _this.next[key], _this.name + '.' + key, opts).run();
 	      });
 	    }
 	  }, {
@@ -1686,8 +1689,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var DEFAULT_INCLUDE = /./;
 	exports.DEFAULT_INCLUDE = DEFAULT_INCLUDE;
 	var DEFAULT_EXCLUDE = /[^a-zA-Z0-9]/;
-
 	exports.DEFAULT_EXCLUDE = DEFAULT_EXCLUDE;
+	var DEFAULT_MAXDEPTH = 10;
+
+	exports.DEFAULT_MAXDEPTH = DEFAULT_MAXDEPTH;
 	var toRegExp = function toRegExp(s) {
 	  return (0, _lodashIsString2['default'])(s) ? new RegExp('^' + s + '$') : s;
 	};
@@ -1701,10 +1706,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var include = _opts$include === undefined ? [DEFAULT_INCLUDE] : _opts$include;
 	  var _opts$exclude = opts.exclude;
 	  var exclude = _opts$exclude === undefined ? [DEFAULT_EXCLUDE] : _opts$exclude;
+	  var _opts$maxdepth = opts.maxdepth;
+	  var maxdepth = _opts$maxdepth === undefined ? DEFAULT_MAXDEPTH : _opts$maxdepth;
 
 	  return {
 	    include: toArray(include).map(toRegExp),
 	    exclude: toArray(exclude).map(toRegExp),
+	    maxdepth: opts.maxdepth,
 	    useImmutable: opts.useImmutable
 	  };
 	};
